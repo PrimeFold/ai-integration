@@ -2,16 +2,16 @@
 "use client";
 
 import { useState } from "react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Badge } from "@/ui/badge";
+import { Button } from "@/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
+} from "@/ui/card";
+import { Textarea } from "@/ui/textarea";
 import { parseDevTask, type TaskBreakdown } from "./action";
 
 const PRESET_PROMPTS = [
@@ -171,16 +171,16 @@ export default function AIPlayground() {
                   <p className="text-muted-foreground font-semibold">
                     Subtasks:
                   </p>
-                  <ul className="space-y-1.5">
+                  <ul className="space-y-1.5 list-none p-0">
                     {result.subtasks?.map((step, i: number) => (
                       <li
                         key={i}
-                        className="flex items-start gap-2 bg-muted/50 p-2 rounded border"
+                        className="flex items-start gap-2 bg-muted/50 p-3 rounded border border-border text-foreground text-xs"
                       >
-                        <span className="text-emerald-500 font-bold">
+                        <span className="text-emerald-500 font-bold shrink-0">
                           0{i + 1}.
                         </span>
-                        <span>{step}</span>
+                        <span className="break-words">{step}</span>
                       </li>
                     ))}
                   </ul>
