@@ -62,15 +62,25 @@ export async function searchDatabase(query:string , category:string):Promise<Sea
     return results;
 }
 
-export async function generateOutput(results:SearchResult[],question:string):Promise<string>{
+export async function generateOutput(results:SearchResult[],question:string):Promise<{message:string,error?:string,output?:string}>{
     const context = contextualizeResults(results);
+    try {
+        
+        const {output} = await generateText({
+            model:google("gemini-3.5-flash-lite"),
+            prompt:`You're an expert at summarizing and is a concise and crisp answerer.
+            Your job is to look at the context provided : ${context} and answer the question asked by the User :${question}
+            You're strictly hereby supposed to answer in points when needed & not hallucinate at all. `
+        })
 
-    const {output} = await generateText({
-        model:google("gemini-3.5-flash-lite"),
-        prompt:`You're an expert at summarizing and is a concise and crisp answerer.
-        Your job is to look at the context provided : ${context} and answer the question asked by the User :${question}
-        You're strictly hereby supposed to answer in points when needed & not hallucinate at all. `
-    })
-
-    return output;
+        return {
+            message:"Successfully generated output",
+            output
+        };
+    } catch (error) {
+        return{
+            message:"Couldn't generate output",
+            error:(error as Error).message,
+        }
+    }
 }
