@@ -46,6 +46,7 @@ function contextualizeResults(result:SearchResult[]):string{
 export async function searchDatabase(query:string , category:string):Promise<SearchResult[]>{
     if(!query.trim() || !category.trim()) return [];
     const queryVectorString = await getEmbeddingVectorString(query);
+    await prisma.$executeRawUnsafe(`SET hnsw.ef_search = 40;`);
     const results = await prisma.$queryRaw<SearchResult[]>
         `
         SELECT id,content,category , similarity 
@@ -72,7 +73,7 @@ export async function generateOutput(results:SearchResult[],question:string):Pro
             Your job is to look at the context provided : ${context} and answer the question asked by the User :${question}
             You're strictly hereby supposed to answer in points when needed & not hallucinate at all. `
         })
-
+        
         return {
             message:"Successfully generated output",
             output
